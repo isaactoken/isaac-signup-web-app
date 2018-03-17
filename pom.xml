@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <description>Project for the Isaac signup web app</description>
+  <groupId>com.isaactoken</groupId>
+  <artifactId>web-signup</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <!-- uses the provided build tooks, to assemble and deploy the app -->
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <executions>
+          <!-- install required modules locally -->
+          <execution>
+            <id>npm-install</id>
+            <phase>pre-clean</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>npm</executable>
+              <commandlineArgs>install</commandlineArgs>
+            </configuration>
+          </execution>
+
+          <!-- build the actual ng app -->
+          <execution>
+            <id>compile</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>ng</executable>
+              <commandlineArgs>build</commandlineArgs>
+            </configuration>
+          </execution>
+
+          <!-- deploy to aws -->
+          <execution>
+            <id>deploy</id>
+            <phase>install</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>aws</executable>
+              <commandlineArgs>s3 sync dist s3://isaactoken-web-signup --delete</commandlineArgs>
+            </ctonfiguration>
+          </execution>
+
+          <execution>
+            <id>deploypublic</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>aws</executable>
+              <commandlineArgs>s3 sync dist s3://signup.isaac.international --delete</commandlineArgs>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+
+    <resources>
+      <!-- attach dist to our jar file for ease of deployment -->
+      <resource>
+        <directory>dist</directory>
+      </resource>
+    </resources>
+  </build>
+</project>
