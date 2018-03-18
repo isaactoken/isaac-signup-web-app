@@ -1,0 +1,65 @@
+
+@import url('../../styles.less');
+
+nav#nav-main {
+	background: white;
+	height: 85px;
+    position: fixed;
+    top:0;
+	&:after {
+		content: " ";
+		display: block;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		height: 10px;
+		width: 100%;
+		background: linear-gradient(45deg, #FFA466, #FF5360);
+		z-index: 1;
+	}
+
+	h1 {
+		display: inline-block;
+		text-transform: uppercase;
+		font-weight: bolder;
+		color: #21236A;
+		font-size: 29px;
+		padding: 9px 30px;
+		margin:0;
+
+		a {
+		  color: #21236A;
+		  &:hover {
+        color:#21236A;
+        text-decoration: none;
+      }
+		}
+	}
+
+  .logo {
+    height: 60px;
+  }
+
+	ul {
+		display: inline-block;
+		position: absolute;
+        right: 0;
+        top:0;
+		li {
+			display: inline-block;
+			a {
+				padding: 30px 21px;
+				display: inline-block;
+				text-decoration: none;
+				color: #5657AE;
+				cursor: pointer;
+			}
+			a.active {
+				color: #FF7B63;
+			}
+			ul.dropdown {
+				display: none;
+			}
+		}
+	}
+}

@@ -1,0 +1,60 @@
+<div class="container page-wrap">
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <!--<li class="breadcrumb-item home"><a href="#" title="Back to Homepage"><i class="fa fa-home"></i></a></li>-->
+      <!--<li class="breadcrumb-item active" aria-current="page">Sign In</li>-->
+    </ol>
+  </nav>
+
+  <h2>Sign Up for Isaac</h2>
+  <h4></h4>
+
+  <div class="container dark">
+    <div class="container light">
+      <div class="content signup">
+        <h2>Use the Isaac Account Creator</h2>
+
+        <p>
+          The Isaac Account Creator was set up to quickly get you started on the Stellar test network with a pre-funded account that is set up to receive Isaac tokens.  
+        </p>
+
+        <div class="text-center">
+          <button class="button primary" (click)="setAnonymousAccount()">Create a Stellar Account</button>
+        </div>
+
+        <br />
+        <hr />
+        <br />
+
+        <h2>Set Up Your Account Manually</h2>
+
+        <p>
+          You can also manually set up your account using the <a href="https://www.stellar.org/laboratory" target="_blank">Stellar Laboratory</a>.  We discuss the background and steps required on a <a href="https://steemit.com/cryptocurrency/@berlinguyinca/trusting-the-isaac-token-using-the-stellar-laboratory" target="_blank">Steem post</a>, but in short:
+        </p>
+
+        <ol>
+          <li>Go the the <a href="https://www.stellar.org/laboratory/#account-creator?network=test" target="_blank">Account Creator</a> to generate a new account keypair (Isaac runs on the test network during the beta release, which is selected by default)</li>
+
+          <li>Since we're on the test network, you can quickly fund your account on the same page by pasting your public key and request lumens from the Friendbot</li>
+
+          <li>Before going further, store your new public and secret keys in a <strong>secure</strong> place!</li>
+
+          <li>Next, go to the <a href="https://www.stellar.org/laboratory//#txbuilder?network=test" target="_blank">Transaction Builder</a> and:
+            <ol>
+              <li>Paste your public key as the Source Account</li>
+              <li>Generate the neext Transaction Sequence Number</li>
+              <li>Select "Change Trust" under Operation Type</li>
+              <li>Under asset select "Alphanumeric 12", set the Asset Code to "Isaac" and the Issuer Account ID to "GD5SQKW4MDDAQDUSW7CVJJCMF5JWBXBY5RN7XYHDR4L6FF2NAU4I7GOQ" (without quotes)</li>
+              <li>Click Sign in Transaction Signer</li>
+              <li>Paste your secret key as a Signer in the Signatures section, then click Submit to Post Transaction endpoint</li>
+              <li>Finally, click Submit to finalize your transaction</li>
+            </ol>
+          </li>
+
+          <li>And you're done!  You can use the <a href="https://www.stellar.org/laboratory//#explorer?network=test" target="_blank">Endpoint Explorer</a> to view your account summary and verify that you now have a 0 balance for the ISAAC asset.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
