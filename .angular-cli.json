@@ -24,7 +24,9 @@
         "styles.css",
         "styles.less"
       ],
-      "scripts": [],
+      "scripts": [
+	    "../node_modules/stellar-sdk/dist/stellar-sdk.js"
+	  ],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",

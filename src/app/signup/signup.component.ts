@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
+declare var StellarSdk: any;
 
 @Component({
   selector: 'app-home',
