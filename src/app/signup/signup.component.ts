@@ -16,6 +16,10 @@ export class SignupComponent {
   server: any;
   
   running: boolean;
+  loadingText: string;
+  success: boolean;
+  error: string;
+  
   pair: any;
   account: any;
 
@@ -28,22 +32,21 @@ export class SignupComponent {
 
   private createAccount() {
     this.running = true;
+	this.loadingText = 'Creating Your Account...';
     
     var isaacToken = new StellarSdk.Asset(this.ISAAC_ASSET_NAME, this.ISAAC_ISSUING_ACCOUNT);
     
-    // Local variables to avoid scrope issues
-    var pair = StellarSdk.Keypair.random();
-    var server = this.server;
-    
-    this.pair = pair;
+    // Local variable to avoid scrope issues
+	var self = this;
+    self.pair = StellarSdk.Keypair.random();
 	
-    this.http.get('https://friendbot.stellar.org?addr='+ pair.publicKey())
+    this.http.get('https://friendbot.stellar.org?addr='+ self.pair.publicKey())
       .subscribe((data) => {
         console.log(data);
       
-        server.loadAccount(pair.publicKey()).then(function(account) {
-          console.log('Received details for account: '+ pair.publicKey());
-          this.account = account;
+        self.server.loadAccount(self.pair.publicKey()).then(function(account) {
+          console.log('Received details for account: '+ self.pair.publicKey());
+          self.account = account;
           
           account.balances.forEach(function(balance) {
             console.log('Type:', balance.asset_type, ', Balance:', balance.balance);
@@ -56,21 +59,27 @@ export class SignupComponent {
             }))
             .build();
           
-          transaction.sign(pair);
+          transaction.sign(self.pair);
           
+		  self.loadingText = 'Generating Trust Transaction...';
           console.log('Submitting trust transaction...');
           
-          return server.submitTransaction(transaction);
+          return self.server.submitTransaction(transaction);
         })
-        .then(function() {
-          return server.loadAccount(pair.publicKey).then(function(account) {
-                console.log('Received details for account after transaction');
-                this.account = account;
-                
-                account.balances.forEach(function(balance) {
-                  console.log('Type:', balance.asset_type, ', Balance:', balance.balance);
-                });
-              });
+        .then(function(result) {
+		  console.log('Trust transaction successful');
+		  console.log(result);
+		  
+          self.server.loadAccount(self.pair.publicKey()).then(function(account) {
+			console.log('Received details for account after transaction');
+			self.account = account;
+			self.success = true;
+			self.running = false;
+			
+			account.balances.forEach(function(balance) {
+			  console.log('Type:', balance.asset_type, ', Balance:', balance.balance);
+			});
+		  });
         })
         .catch(function(error) {
           console.error('Error!', error);
