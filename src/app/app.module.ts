@@ -14,7 +14,7 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { FooterComponent } from './navbar/footer.component';
-import { SignupComponent } from './signup/signup.component';
+import { SignupComponent } from './signup.component';
 
 import { Globals } from './app.globals';
 
