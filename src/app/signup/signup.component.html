@@ -16,12 +16,44 @@
         <h2>Use the Isaac Account Creator</h2>
 
         <p>
-          The Isaac Account Creator was set up to quickly get you started on the Stellar test network with a pre-funded account that is set up to receive Isaac tokens.  
+          The Isaac Account Creator was set up to quickly get you started on the Stellar test network with a pre-funded account that is set up to receive Isaac tokens.  This web application is made <a href="https://github.com/isaactoken/isaac-signup-web-app">open source</a> to provide trust that your created accounts are secure.
         </p>
+        <br />
 
-        <div class="text-center">
+        <div class="text-center" *ngIf="!running && !error && !success">
           <button class="button primary" (click)="createAccount()">Create a Stellar Account</button>
         </div>
+
+        <div class="text-center" *ngIf="running">
+		  <h3><i class="fa fa-spinner fa-pulse fa-fw"></i> {{loadingText}}</h3>
+        </div>
+
+        <div class="alert alert-success" role="alert" *ngIf="success">
+          <h3>Success!</h3>
+          <p>Account successfully created.  The public key below may now be used to get started with Isaac.  Please store the generated keys in a secure place!</p>
+        </div>
+        <div class="alert alert-danger" role="alert" *ngIf="error">
+          <h3>Error!</h3>
+		  <p>{{error}}</p>
+		  <p>Please try again later.  If the issue persists, contact Isaac support.</p>
+        </div>
+
+		<h3 *ngIf="pair">Account Keys</h3>
+	    <dl class="row keys" *ngIf="pair">
+	      <dt class="col-sm-2">Public Key:</dt>
+	      <dd class="col-sm-10">{{pair.publicKey()}}</dd>
+
+	      <dt class="col-sm-2">Secret Key:</dt>
+	      <dd class="col-sm-10">{{pair.secret()}}</dd>
+	    </dl>
+
+		<h3 *ngIf="account">Account Balances</h3>
+	    <dl class="row keys" *ngIf="account">
+		  <ng-template ngFor let-balance [ngForOf]="account.balances">
+        <dt class="col-sm-6 text-right">{{balance.asset_type == 'native' ? 'Stellar Lumens' : balance.asset_code}}:</dt>
+        <dd class="col-sm-6">{{balance.balance}}</dd>
+		  </ng-template>
+	    </dl>
 
         <br />
         <hr />
