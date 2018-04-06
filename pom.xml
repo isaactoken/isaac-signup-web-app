@@ -52,7 +52,7 @@
             </goals>
             <configuration>
               <executable>aws</executable>
-              <commandlineArgs>s3 sync dist s3://isaactoken-web-signup --delete</commandlineArgs>
+              <commandlineArgs>s3 sync dist s3://isaactoken-signup --delete</commandlineArgs>
             </ctonfiguration>
           </execution>
 
