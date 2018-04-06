@@ -52,8 +52,8 @@
             </goals>
             <configuration>
               <executable>aws</executable>
-              <commandlineArgs>s3 sync dist s3://isaactoken-signup --delete</commandlineArgs>
-            </ctonfiguration>
+              <commandlineArgs>s3 sync dist s3://signup.isaac.international --delete</commandlineArgs>
+            </configuration>
           </execution>
 
           <execution>
