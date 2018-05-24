@@ -13,6 +13,7 @@ export class SignupComponent {
   ISAAC_ASSET_NAME: string = 'ISAAC';
   ISAAC_ISSUING_ACCOUNT: string = 'GD5SQKW4MDDAQDUSW7CVJJCMF5JWBXBY5RN7XYHDR4L6FF2NAU4I7GOQ';
 
+  secretKey: string;
   server: any;
 
   running: boolean;
@@ -25,12 +26,12 @@ export class SignupComponent {
 
   constructor(private http: HttpClient) {
     StellarSdk.Network.useTestNetwork();
-    this.server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+    this.server = new StellarSdk.Server('https://horizon.stellar.org');
 
     this.running = false;
   }
 
-  private createAccount() {
+  private setupAccount() {
     this.running = true;
     this.loadingText = 'Creating Your Account...';
 
@@ -38,59 +39,48 @@ export class SignupComponent {
 
     // Local variable to avoid scrope issues
     var self = this;
-    self.pair = StellarSdk.Keypair.random();
+    self.pair = StellarSdk.Keypair.fromSecret(self.secretKey);
 
-    this.http.get('https://friendbot.stellar.org?addr='+ self.pair.publicKey())
-      .subscribe((data) => {
-        console.log(data);
+    self.server.loadAccount(self.pair.publicKey()).then(function(account) {
+      console.log('Received details for account: '+ self.pair.publicKey());
+      self.account = account;
 
-        self.server.loadAccount(self.pair.publicKey()).then(function(account) {
-          console.log('Received details for account: '+ self.pair.publicKey());
-          self.account = account;
+      account.balances.forEach(function(balance) {
+        console.log('Type:', balance.asset_type, ', Balance:', balance.balance);
+      });
 
-          account.balances.forEach(function(balance) {
-            console.log('Type:', balance.asset_type, ', Balance:', balance.balance);
-          });
+      // Generate trust transaction
+      var transaction = new StellarSdk.TransactionBuilder(account)
+        .addOperation(StellarSdk.Operation.changeTrust({
+          asset: isaacToken
+        }))
+        .build();
 
-          // Generate trust transaction
-          var transaction = new StellarSdk.TransactionBuilder(account)
-            .addOperation(StellarSdk.Operation.changeTrust({
-              asset: isaacToken
-            }))
-            .build();
+      transaction.sign(self.pair);
 
-          transaction.sign(self.pair);
+      self.loadingText = 'Generating Trust Transaction...';
+      console.log('Submitting trust transaction...');
 
-          self.loadingText = 'Generating Trust Transaction...';
-          console.log('Submitting trust transaction...');
+      return self.server.submitTransaction(transaction);
+    })
+    .then(function(result) {
+      console.log('Trust transaction successful');
+      console.log(result);
 
-          return self.server.submitTransaction(transaction);
-        })
-        .then(function(result) {
-          console.log('Trust transaction successful');
-          console.log(result);
-
-          self.server.loadAccount(self.pair.publicKey()).then(function(account) {
-          console.log('Received details for account after transaction');
-          self.account = account;
-          self.success = true;
-          self.running = false;
-
-          account.balances.forEach(function(balance) {
-            console.log('Type:', balance.asset_type, ', Balance:', balance.balance);
-          });
-        });
-      })
-      .catch(function(error) {
-        console.error('Error!', error);
-        self.error = 'Unable to execute trust transaction!';
+      self.server.loadAccount(self.pair.publicKey()).then(function(account) {
+        console.log('Received details for account after transaction');
+        self.account = account;
         self.success = true;
         self.running = false;
+
+        account.balances.forEach(function(balance) {
+          console.log('Type:', balance.asset_type, ', Balance:', balance.balance);
+        });
       });
-    },
-    (error) => {
+    })
+    .catch(function(error) {
       console.error('Error!', error);
-      self.error = 'Unable to generate Stellar account!';
+      self.error = 'Unable to execute trust transaction!';
       self.success = true;
       self.running = false;
     });

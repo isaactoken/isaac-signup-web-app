@@ -7,21 +7,25 @@
     </ol>
   </nav>
 
-  <h2>Sign Up for Isaac</h2>
+  <h2>Get Started with Isaac</h2>
   <h4></h4>
 
   <div class="container dark">
     <div class="container light">
       <div class="content signup">
-        <h2>Use the Isaac Account Creator</h2>
+        <h2>Use the Isaac Account Setup</h2>
 
         <p>
-          The Isaac Account Creator was set up to quickly get you started on the Stellar test network with a pre-funded account that is set up to receive Isaac tokens.  This web application is made <a href="https://github.com/isaactoken/isaac-signup-web-app">open source</a> to provide trust that your created accounts are secure.
+          The Isaac Account Setup lets you quickly started with Isaac on the Stellar public network by applying the trust
+          operation required for your account to receive Isaac tokens.
+          All you need is a funded Stellar account with at least 1.5 XLM (Stellar requires a minimum balance to prevent spam accounts).
+          This tool is <a href="https://github.com/isaactoken/isaac-signup-web-app">open source</a> to provide confidence that your account remains secure.
         </p>
         <br />
 
-        <div class="text-center" *ngIf="!running && !error && !success">
-          <button class="button primary" (click)="createAccount()">Create a Stellar Account</button>
+        <div id="accounts" *ngIf="!running && !error && !success">
+          <input class="form-control" type="text" title="Secret Key" placeholder="Secret Key" [(ngModel)]="secretKey">
+          <button class="button primary" (click)="setupAccount()">Setup Account</button>
         </div>
 
         <div class="text-center" *ngIf="running">
@@ -49,10 +53,10 @@
 
 		<h3 *ngIf="account">Account Balances</h3>
 	    <dl class="row keys" *ngIf="account">
-		  <ng-template ngFor let-balance [ngForOf]="account.balances">
-        <dt class="col-sm-6 text-right">{{balance.asset_type == 'native' ? 'Stellar Lumens' : balance.asset_code}}:</dt>
-        <dd class="col-sm-6">{{balance.balance}}</dd>
-		  </ng-template>
+  		  <ng-template ngFor let-balance [ngForOf]="account.balances">
+          <dt class="col-sm-6 text-right">{{balance.asset_type == 'native' ? 'Stellar Lumens' : balance.asset_code}}:</dt>
+          <dd class="col-sm-6">{{balance.balance}}</dd>
+  		  </ng-template>
 	    </dl>
 
         <br />
@@ -62,18 +66,22 @@
         <h2>Set Up Your Account Manually</h2>
 
         <p>
-          You can also manually set up your account using the <a href="https://www.stellar.org/laboratory" target="_blank">Stellar Laboratory</a>.  We discuss the background and steps required on a <a href="https://steemit.com/cryptocurrency/@berlinguyinca/trusting-the-isaac-token-using-the-stellar-laboratory" target="_blank">Steem post</a>, but in short:
+          You can also manually set up your account using the <a href="https://www.stellar.org/account-viewer" target="_blank">Stellar Account Viewer</a>.
+           We discuss the background and steps required on a
+           <a href="https://steemit.com/cryptocurrency/@berlinguyinca/trusting-the-isaac-token-using-the-stellar-laboratory" target="_blank">Steem article</a>,
+           but in short:
         </p>
 
         <ol>
-          <li>Go the the <a href="https://www.stellar.org/laboratory/#account-creator?network=test" target="_blank">Account Creator</a> to generate a new account keypair (Isaac runs on the test network during the beta release, which is selected by default)</li>
+          <li>Go the the <a href="https://www.stellar.org/account-viewer" target="_blank">Stellar Account Viewer</a> to generate a new account keypair</li>
 
-          <li>Since we're on the test network, you can quickly fund your account on the same page by pasting your public key and request lumens from the Friendbot</li>
+          <li>Before going further, store your new public and secret keys in a <strong>secure</strong> place!  You cannot recover your secret key if you forget it!</li>
 
-          <li>Before going further, store your new public and secret keys in a <strong>secure</strong> place!</li>
+          <li>Next, sign up with your secret key.  If you just created an account, you will see a message that your account is inactive.  </li>
 
-          <li>Next, go to the <a href="https://www.stellar.org/laboratory//#txbuilder?network=test" target="_blank">Transaction Builder</a> and:
+          <li>Next, go to the <a href="https://www.stellar.org/laboratory/#txbuilder?network=public" target="_blank">Transaction Builder</a> and:
             <ol>
+              <li>Ensure that the public network is selected in the top-right</li>
               <li>Paste your public key as the Source Account</li>
               <li>Generate the neext Transaction Sequence Number</li>
               <li>Select "Change Trust" under Operation Type</li>
@@ -84,7 +92,7 @@
             </ol>
           </li>
 
-          <li>And you're done!  You can use the <a href="https://www.stellar.org/laboratory//#explorer?network=test" target="_blank">Endpoint Explorer</a> to view your account summary and verify that you now have a 0 balance for the ISAAC asset.</li>
+          <li>And you're done!  You can use the <a href="https://www.stellar.org/laboratory/#explorer?network=public" target="_blank">Endpoint Explorer</a> to view your account summary and verify that you now have a 0 balance for the ISAAC asset.</li>
         </ol>
       </div>
     </div>
